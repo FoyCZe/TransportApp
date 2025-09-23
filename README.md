@@ -3,7 +3,7 @@ STÁLE VE VÝVOJI!
 Po dokončení budou k dispozici 3 role (řidič, dispečer a správce)
 
 
-Řidič - kombinací SPZ vozidla (menší fluktuace) a předem vygenerovaného hesla
+Řidič - přihlášení kombinací SPZ vozidla (menší fluktuace) a předem vygenerovaného hesla
       - přehled aktuálních a následných přeprav
       - detail přepravy kde bude možno doplnit chybějící údaje a nahrát potřebné dokumenty
 
