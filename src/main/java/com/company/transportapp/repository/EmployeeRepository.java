@@ -1,7 +1,7 @@
 package com.company.transportapp.repository;
 
 
-import com.company.transportapp.model.Employee;
+import com.company.transportapp.model.entities.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

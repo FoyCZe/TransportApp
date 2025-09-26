@@ -1,6 +1,6 @@
 package com.company.transportapp.service;
 
-import com.company.transportapp.model.Employee;
+import com.company.transportapp.model.entities.Employee;
 import com.company.transportapp.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

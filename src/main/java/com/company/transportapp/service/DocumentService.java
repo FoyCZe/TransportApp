@@ -1,11 +1,13 @@
 package com.company.transportapp.service;
 
 
-import com.company.transportapp.model.Document;
-import com.company.transportapp.model.Transport;
+import com.company.transportapp.model.entities.Document;
+import com.company.transportapp.model.enums.Enums;
+import com.company.transportapp.model.entities.Transport;
 import com.company.transportapp.repository.DocumentRepository;
 import com.company.transportapp.util.FileStorageUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,22 +28,24 @@ public class DocumentService {
 
     private final String baseDir = "uploads/";
 
-    public void store(MultipartFile file, Long transportId, String type) throws IOException {
-        String filename = FileStorageUtil.storeFile(file, baseDir + transportId);
-        Document doc = new Document();
-        doc.setFilename(filename);
-        doc.setType(type);
-        doc.setOfficial(false);
-        doc.setUploadTime(LocalDateTime.now());
-        doc.setTransport(new Transport());
-        doc.getTransport().setId(transportId);
+    public void store(MultipartFile file, Long transportId, Enums.DocumentType type) throws IOException {
+        String storedPath = FileStorageUtil.storeFile(file, baseDir + transportId);
+        Document doc = Document.builder()
+                        .transport(Transport.builder().id(transportId).build())
+                        .documentType(type)
+                        .filePath(storedPath)
+                        .originalFileName(file.getOriginalFilename())
+                        .official(false)
+                        .uploadedAt(LocalDateTime.now())
+                        .build();
+
         documentRepository.save(doc);
     }
 
     public Resource loadAsResource(Long id) throws MalformedURLException {
         Document doc = documentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Dokument nenalezen!"));
-        Path path = Paths.get(baseDir + doc.getTransport().getId() + "/" + doc.getFilename());
+        Path path = Paths.get(doc.getFilePath());
         return new UrlResource(path.toUri());
     }
 

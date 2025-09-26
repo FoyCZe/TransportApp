@@ -1,6 +1,7 @@
-package com.company.transportapp.model;
+package com.company.transportapp.model.entities;
 
 
+import com.company.transportapp.model.enums.Enums;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -39,7 +40,7 @@ public class Transport {
 
     // Čísla kontejnerů / Release kódy
     private String containerNumber;
-    private String releaseNumber;
+    private String releaseCode;
     private String containerNumber2;
     private String releaseCode2;
 

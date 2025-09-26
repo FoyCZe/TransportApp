@@ -1,4 +1,4 @@
-package com.company.transportapp.model;
+package com.company.transportapp.model.enums;
 
 public class Enums {
 

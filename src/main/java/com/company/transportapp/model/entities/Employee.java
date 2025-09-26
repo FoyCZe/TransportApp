@@ -1,6 +1,7 @@
-package com.company.transportapp.model;
+package com.company.transportapp.model.entities;
 
 
+import com.company.transportapp.model.enums.Enums;
 import jakarta.persistence.*;
 import lombok.*;
 

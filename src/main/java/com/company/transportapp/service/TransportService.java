@@ -1,8 +1,8 @@
 package com.company.transportapp.service;
 
-import com.company.transportapp.model.Employee;
-import com.company.transportapp.model.Transport;
-import com.company.transportapp.model.Vehicle;
+import com.company.transportapp.model.entities.Employee;
+import com.company.transportapp.model.entities.Transport;
+import com.company.transportapp.model.entities.Vehicle;
 import com.company.transportapp.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -40,5 +40,6 @@ public class TransportService {
         db.setDirection(t.getDirection());
         db.setContainerNumber(t.getContainerNumber());
         db.setReleaseCode(t.getReleaseCode());
+        return transportRepo.save(db);
     }
 }
