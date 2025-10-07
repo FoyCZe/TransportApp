@@ -10,8 +10,12 @@ import java.util.Optional;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
+
+    // Vyhledávání podle emailu nebo telefonu
     Optional<Employee> findByPhoneNumber(String phoneNumber);
     Optional<Employee> findByEmail(String email);
-    List<Employee> findByLastName(String lastName);
-    List<Employee> findByFirstName(String firstName);
+
+    // Vyhledávání podle jména nebo příjmení (case insensitive)
+    List<Employee> findByLastNameContainingIgnoreCase(String lastName);
+    List<Employee> findByFirstNameContainingIgnoreCase(String firstName);
 }

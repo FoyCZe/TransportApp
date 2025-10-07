@@ -18,19 +18,35 @@ public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
-    @Column(nullable=false) private String firstName;
-    @Column(nullable=false) private String lastName;
-    @Column(nullable=false) private String phone;
+    // Povinné údaje
+    @Column(nullable = false)
+    private String firstName;
+
+    @Column( nullable = false)
+    private String lastName;
+
+    @Column(nullable = false, unique = true)
+    private String phoneNumber;
+
+    // Nepovinné údaje
+    @Column(unique = true)
+    private String email;
 
     private String birthNumber;
-    private String email;
     private String idCardNumber;
     private String drivingLicenseNumber;
     private String adrLicenseNumber;
     private String address;
     private String passportNumber;
 
+    // Role uživatele v systému
     @Enumerated(EnumType.STRING)
     @Column(nullable=false)
-    private Enums.Role role;  //DRIVER/DISPATCHER/ADMIN
+    private Role role;
+
+    public enum Role {
+        DRIVER,
+        DISPATCHER,
+        ADMIN
+    }
 }
