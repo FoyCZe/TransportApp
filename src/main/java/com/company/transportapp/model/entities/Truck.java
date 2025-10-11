@@ -1,5 +1,6 @@
 package com.company.transportapp.model.entities;
 
+import com.company.transportapp.model.enums.VehicleType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
