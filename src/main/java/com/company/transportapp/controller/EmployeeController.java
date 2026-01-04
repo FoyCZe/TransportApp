@@ -1,7 +1,10 @@
 package com.company.transportapp.controller;
 
+import com.company.transportapp.dto.EmployeeRequestDTO;
+import com.company.transportapp.dto.EmployeeResponseDTO;
 import com.company.transportapp.model.entities.Employee;
 import com.company.transportapp.service.EmployeeService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,20 +22,22 @@ public class EmployeeController {
 
     // Vrátí seznam vše zaměstnanců
     @GetMapping
-    public ResponseEntity<List<Employee>> getAllEmployees() {return ResponseEntity.ok(service.list());
+    public List<EmployeeResponseDTO> getAllEmployees() {
+        return service.list();
     }
 
     // Vrátí zaměstnance podle ID
     @GetMapping("/{id}")
-    public ResponseEntity<Employee> getEmployeeById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.get(id));
+    public Employee getEmployeeById(@PathVariable Long id) {
+        return service.get(id);
     }
 
     // Vytvoří nového zaměstnance
     @PostMapping
-    public ResponseEntity<Employee> createEmployee(@RequestBody Employee employee) {
-        Employee created = service.create(employee);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    public ResponseEntity<EmployeeResponseDTO> create(@Valid @RequestBody EmployeeRequestDTO dto) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(service.create(dto));
     }
 
     // Aktualizuje zaměstnance podle ID
@@ -46,32 +51,32 @@ public class EmployeeController {
 
     // Smaže zaměstnance podle ID
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteEmployee(@PathVariable Long id) {
         service.delete(id);
-        return ResponseEntity.noContent().build();
     }
 
     // Vyhledávání podle jména
     @GetMapping("/search/firstname")
-    public ResponseEntity<List<Employee>> searchByFirstName(@RequestParam String firstName) {
-        return ResponseEntity.ok(service.findByFirstName(firstName));
+    public List<Employee> searchByFirstName(@RequestParam String value) {
+        return service.findByFirstName(value);
     }
 
     // Vyhledávání podle příjmení
     @GetMapping("/search/lastname")
-    public ResponseEntity<List<Employee>> searchByLastName(@RequestParam String lastName) {
-        return ResponseEntity.ok(service.findByLastName(lastName));
+    public List<Employee> searchByLastName(@RequestParam String value) {
+        return service.findByLastName(value);
     }
 
     // Vyhledávání podle emailu
     @GetMapping("/search/email")
-    public ResponseEntity<Employee> searchByEmail(@RequestParam String email) {
-        return ResponseEntity.ok(service.findByEmail(email));
+    public Employee findByEmail(@RequestParam String value) {
+        return service.findByEmail(value);
     }
 
     // Vyhledávání podle telefonního čísla
     @GetMapping("/search/phone")
-    public ResponseEntity<Employee> searchByPhoneNumber(@RequestParam String phoneNumber) {
-        return ResponseEntity.ok(service.findByPhoneNumber(phoneNumber));
+    public Employee findByPhoneNumber(@RequestParam String value) {
+        return service.findByPhoneNumber(value);
     }
 }

@@ -1,5 +1,8 @@
 package com.company.transportapp.service;
 
+import com.company.transportapp.dto.EmployeeRequestDTO;
+import com.company.transportapp.dto.EmployeeResponseDTO;
+import com.company.transportapp.mapper.EmployeeMapper;
 import com.company.transportapp.model.entities.Employee;
 import com.company.transportapp.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,52 +21,43 @@ public class EmployeeService {
     /**
      * Vrátí seznam všech zaměstnanců
      */
-    public List<Employee> list() {
-        return repo.findAll();
+    public List<EmployeeResponseDTO> list() {
+        return repo.findAll()
+                .stream()
+                .map(EmployeeMapper::toResponse)
+                .toList();
     }
 
     /**
      * Vrátí zaměstnance podle ID
      * @throws ResponseStatusException 404 pokud zaměstnanec neexistuje
      */
-    public Employee get(Long id) {
-        return repo.findById(id)
+    public EmployeeResponseDTO get(Long id) {
+        return EmployeeMapper.toResponse(
+                repo.findById(id)
                 .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Zaměstnanec s ID " + id + " nenalezen."));
+                        new ResponseStatusException(HttpStatus.NOT_FOUND, "Zaměstnanec nenalezen"))
+        );
     }
 
     /**
      * Vytvoří nového zaměstnance, s kontrolou duplicity e-mailu a telefonu
      */
-    public Employee create(Employee e) {
-        validateUniqueEmailAndPhone(e);
-        return repo.save(e);
+    public EmployeeResponseDTO create(EmployeeRequestDTO dto) {
+        Employee e = EmployeeMapper.toEntity(dto);
+        return EmployeeMapper.toResponse(repo.save(e));
     }
 
     /**
      * Aktualizuje existujícího zaměstnance
      */
-    public Employee update(Long id, Employee e) {
-        Employee db = get(id);
+    public EmployeeResponseDTO update(Long id, EmployeeRequestDTO dto) {
+        Employee e = repo.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Zaměstnanec nenalezen"));
+        EmployeeMapper.updateEntity(e, dto);
+        return EmployeeMapper.toResponse(repo.save(e));
 
-        // Kontrola duplicity emailu a telefonu (pokud se mění)
-        if (!db.getEmail().equals(e.getEmail()) || !db.getPhoneNumber().equals(e.getPhoneNumber())) {
-            validateUniqueEmailAndPhone(e);
-        }
-
-        db.setFirstName(e.getFirstName());
-        db.setLastName(e.getLastName());
-        db.setPhoneNumber(e.getPhoneNumber());
-        db.setBirthNumber(e.getBirthNumber());
-        db.setIdCardNumber(e.getIdCardNumber());
-        db.setDrivingLicenseNumber(e.getDrivingLicenseNumber());
-        db.setAdrLicenseNumber(e.getAdrLicenseNumber());
-        db.setPassportNumber(e.getPassportNumber());
-        db.setAddress(e.getAddress());
-        db.setEmail(e.getEmail());
-        db.setRole(e.getRole());
-
-        return repo.save(db);
     }
 
     /**

@@ -33,6 +33,6 @@ public class Truck {
     @Column(length = 100)
     private String model; // Model a motorizace tahače (např. R500, FH16)
 
-    @Column(length = 255)
+    @Column(length = 250)
     private String notes; // Poznámky k tahači (např. servis, přidělení, platnost STK)
 }
