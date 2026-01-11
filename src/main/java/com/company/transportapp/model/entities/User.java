@@ -1,6 +1,6 @@
 package com.company.transportapp.model.entities;
 
-import com.company.transportapp.model.enums.EmployeeRole;
+import com.company.transportapp.model.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,7 +28,7 @@ public class User {
     // Role: DRIVER, DISPATCHER, ADMIN
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private EmployeeRole role;
+    private UserRole role;
 
     // Povolení účtu(true = aktivní, false = zablokovaný)
     @Column(nullable = false)
@@ -38,7 +38,7 @@ public class User {
     @Column(length = 15)
     private String truckPlate;
 
-    public User(String username, String password, EmployeeRole role, String truckPlate) {
+    public User(String username, String password, UserRole role, String truckPlate) {
         this.username = username;
         this.password = password;
         this.role = role;
