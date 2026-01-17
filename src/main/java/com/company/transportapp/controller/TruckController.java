@@ -1,7 +1,7 @@
 package com.company.transportapp.controller;
 
 import com.company.transportapp.model.entities.Truck;
-import com.company.transportapp.model.enums.VehicleType;
+import com.company.transportapp.model.enums.TruckType;
 import com.company.transportapp.service.TruckService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -48,7 +48,7 @@ public class TruckController {
 
     // Vyhledávání podle typu vozidla
     @GetMapping("/search/byType")
-    public List<Truck> searchByType(@RequestParam VehicleType type) {
+    public List<Truck> searchByType(@RequestParam TruckType type) {
         return service.findByType(type);
     }
 

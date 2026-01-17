@@ -1,7 +1,10 @@
 package com.company.transportapp.service;
 
+import com.company.transportapp.dto.TransportRequestDTO;
+import com.company.transportapp.dto.TransportResponseDTO;
 import com.company.transportapp.model.entities.Employee;
 import com.company.transportapp.model.entities.Transport;
+import com.company.transportapp.model.entities.Truck;
 import com.company.transportapp.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,7 +17,8 @@ import java.util.List;
 public class TransportService {
 
     private final TransportRepository transportRepo;
-    private final VehicleRepository vehicleRepo;
+    private final TruckRepository truckRepo;
+    private final TrailerRepository trailerRepo;
     private final EmployeeRepository employeeRepo;
     private final StopRepository stopRepo;
     private final DocumentRepository documentRepo;
@@ -23,10 +27,10 @@ public class TransportService {
     public List<Transport> list(){return transportRepo.findAll();}
     public Transport get(Long id){return transportRepo.findById(id).orElseThrow();}
 
-    public Transport create(Transport t, Long vehicleId, Long driverId){
-        Vehicle v = vehicleRepo.findById(vehicleId).orElseThrow();
+    public TransportResponseDTO create(TransportRequestDTO dto){
+        Truck v = truckRepo.findById(truckId).orElseThrow();
         Employee d = employeeRepo.findById(driverId).orElseThrow();
-        t.setVehicle(v);
+        t.setTruck(v);
         t.setDriver(d);
         t.setStatus("Vytvořeno");
         t.setCreatedAt(LocalDateTime.now());

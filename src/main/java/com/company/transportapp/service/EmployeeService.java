@@ -73,22 +73,29 @@ public class EmployeeService {
     /**
      * Vyhledávání podle jména
      */
-    public List<Employee> findByFirstName(String firstName) {
-        return repo.findByFirstNameContainingIgnoreCase(firstName);
+    public List<EmployeeResponseDTO> findByFirstName(String firstName) {
+        return repo.findByFirstNameContainingIgnoreCase(firstName)
+                .stream()
+                .map(EmployeeMapper::toResponse)
+                .toList();
     }
 
     /**
      * Vyhledávání podle příjmení
      */
-    public List<Employee> findByLastName(String lastName) {
-        return repo.findByLastNameContainingIgnoreCase(lastName);
+    public List<EmployeeResponseDTO> findByLastName(String lastName) {
+        return repo.findByLastNameContainingIgnoreCase(lastName)
+                .stream()
+                .map(EmployeeMapper::toResponse)
+                .toList();
     }
 
     /**
      * Vyhledávání podle emailu
      */
-    public Employee findByEmail(String email) {
+    public EmployeeResponseDTO findByEmail(String email) {
         return repo.findByEmail(email)
+                .map(EmployeeMapper::toResponse)
                 .orElseThrow(() ->
                         new ResponseStatusException(HttpStatus.NOT_FOUND, "Zaměstnanec s emailem " + email + " nenalezen."));
     }
@@ -96,8 +103,9 @@ public class EmployeeService {
     /**
      * Vyhledávání podle telefonního čísla
      */
-    public Employee findByPhoneNumber(String phoneNumber) {
+    public EmployeeResponseDTO findByPhoneNumber(String phoneNumber) {
         return repo.findByPhoneNumber(phoneNumber)
+                .map(EmployeeMapper::toResponse)
                 .orElseThrow(() ->
                         new ResponseStatusException(HttpStatus.NOT_FOUND, "Zaměstnanec s telefonním číslem " + phoneNumber + " nenalezen."));
     }

@@ -1,6 +1,6 @@
 package com.company.transportapp.model.enums;
 
-public enum VehicleType {
+public enum TruckType {
 
     TRACTOR, // tahač návěsů
     SOLO // samostatný nákladní automobil

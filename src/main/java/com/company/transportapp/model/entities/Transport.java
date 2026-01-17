@@ -23,8 +23,12 @@ public class Transport {
     private Long id;
 
     @ManyToOne(optional=false)
-    @JoinColumn(name="vehicle_id")
-    private Vehicle vehicle;
+    @JoinColumn(name="truck_id")
+    private Truck truck;
+
+    @ManyToOne(optional = true)
+    @JoinColumn(name="trailer_id")
+    private Trailer trailer;
 
     @ManyToOne(optional=false)
     @JoinColumn(name="driver_id")
@@ -39,13 +43,8 @@ public class Transport {
     private Enums.Direction direction;  //IMPORT/EXPORT
 
     // Čísla kontejnerů / Release kódy
-    private String containerNumber;
-    private String releaseCode;
-    private String containerNumber2;
-    private String releaseCode2;
-
-    private String containerSize; // Velikost bedny 40HC, 20DV atd..
-    private String sealNumber;  // Číslo plomby
+    @OneToMany(mappedBy = "transport", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CargoItem> cargoItems = new ArrayList<>();
 
     private Double cargoWeight;  // Hmotnost nákladu
 

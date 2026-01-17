@@ -8,7 +8,13 @@ import lombok.Getter;
 @AllArgsConstructor
 public class AuthResponseDTO {
 
-    private String token;
-    private String username;  // SPZ
+
+    // Krátkodobý JWT(Authorization: Bearer ...)
+    private String accessToken;
+
+    // Přihlašovací jméno (SPZ vozidla)
+    private String username;
+
+    // Role uživatele (DRIVER / DISPATCHER / OWNER)
     private UserRole role;
 }

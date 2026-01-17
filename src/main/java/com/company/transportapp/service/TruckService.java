@@ -1,7 +1,7 @@
 package com.company.transportapp.service;
 
 import com.company.transportapp.model.entities.Truck;
-import com.company.transportapp.model.enums.VehicleType;
+import com.company.transportapp.model.enums.TruckType;
 import com.company.transportapp.repository.TruckRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -63,7 +63,7 @@ public class TruckService {
         return repo.findByModelContainingIgnoreCase(model);
     }
 
-    public List<Truck> findByType(VehicleType type) {
+    public List<Truck> findByType(TruckType type) {
         return repo.findByType(type);
     }
 

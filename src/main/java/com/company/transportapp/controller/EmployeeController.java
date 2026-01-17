@@ -28,7 +28,7 @@ public class EmployeeController {
 
     // Vrátí zaměstnance podle ID
     @GetMapping("/{id}")
-    public Employee getEmployeeById(@PathVariable Long id) {
+    public EmployeeResponseDTO getEmployeeById(@PathVariable Long id) {
         return service.get(id);
     }
 
@@ -42,11 +42,11 @@ public class EmployeeController {
 
     // Aktualizuje zaměstnance podle ID
     @PutMapping("/{id}")
-    public ResponseEntity<Employee> updateEmployee(
+    public ResponseEntity<EmployeeResponseDTO> updateEmployee(
             @PathVariable Long id,
-            @RequestBody Employee employee
+            @Valid @RequestBody EmployeeRequestDTO dto
     ) {
-        return ResponseEntity.ok(service.update(id, employee));
+        return ResponseEntity.ok(service.update(id, dto));
     }
 
     // Smaže zaměstnance podle ID
@@ -58,25 +58,25 @@ public class EmployeeController {
 
     // Vyhledávání podle jména
     @GetMapping("/search/firstname")
-    public List<Employee> searchByFirstName(@RequestParam String value) {
+    public List<EmployeeResponseDTO> searchByFirstName(@RequestParam String value) {
         return service.findByFirstName(value);
     }
 
     // Vyhledávání podle příjmení
     @GetMapping("/search/lastname")
-    public List<Employee> searchByLastName(@RequestParam String value) {
+    public List<EmployeeResponseDTO> searchByLastName(@RequestParam String value) {
         return service.findByLastName(value);
     }
 
     // Vyhledávání podle emailu
     @GetMapping("/search/email")
-    public Employee findByEmail(@RequestParam String value) {
+    public EmployeeResponseDTO findByEmail(@RequestParam String value) {
         return service.findByEmail(value);
     }
 
     // Vyhledávání podle telefonního čísla
     @GetMapping("/search/phone")
-    public Employee findByPhoneNumber(@RequestParam String value) {
+    public EmployeeResponseDTO findByPhoneNumber(@RequestParam String value) {
         return service.findByPhoneNumber(value);
     }
 }

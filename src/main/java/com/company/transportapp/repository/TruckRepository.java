@@ -1,7 +1,7 @@
 package com.company.transportapp.repository;
 
 import com.company.transportapp.model.entities.Truck;
-import com.company.transportapp.model.enums.VehicleType;
+import com.company.transportapp.model.enums.TruckType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -15,7 +15,7 @@ public interface TruckRepository extends JpaRepository<Truck, Long> {
 
     List<Truck> findByModelContainingIgnoreCase(String model);
 
-    List<Truck> findByType(VehicleType type);
+    List<Truck> findByType(TruckType type);
 
     List<Truck> findBySoloSubTypeContainingIgnoreCase(String soloSubType);
 }

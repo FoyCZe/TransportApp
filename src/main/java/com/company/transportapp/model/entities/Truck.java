@@ -1,6 +1,6 @@
 package com.company.transportapp.model.entities;
 
-import com.company.transportapp.model.enums.VehicleType;
+import com.company.transportapp.model.enums.TruckType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,7 +22,7 @@ public class Truck {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private VehicleType type; // Typ vozidla (TAHAČ/SÓLO)
+    private TruckType type; // Typ vozidla (TAHAČ/SÓLO)
 
     @Column(length = 50)
     private String soloSubType; // Podtyp sólového vozidla (nosič kontejnerů, ruka atd.)

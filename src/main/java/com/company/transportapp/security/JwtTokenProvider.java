@@ -16,13 +16,16 @@ public class JwtTokenProvider {
     private final long EXPIRATION = 1000 * 60 * 60 * 8;  // 8 hodin
     private final Key key = Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
 
+    private final long ACCESS_EXP = 1000 * 60 * 15;
+    private final long REFRESH_EXP = 1000L * 60 * 60 * 24 * 14;
+
     public String generateToken(String username, UserRole role) {
         return Jwts.builder()
                 .setSubject(username)
                 .claim("role", role.name())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
-                .signWith(key, SignatureAlgorithm.HS256)
+                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_EXP))
+                .signWith(SignatureAlgorithm.HS256, SECRET)
                 .compact();
     }
 
@@ -48,5 +51,27 @@ public class JwtTokenProvider {
                 .setSigningKey(SECRET)
                 .build()
                 .parseClaimsJws(token);
+    }
+
+    public String generateRefreshToken(String username) {
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 7))
+                .signWith(SignatureAlgorithm.HS256, SECRET)
+                .compact();
+    }
+
+    public boolean validateRefreshToken(String token) {
+        try {
+            parse(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public String getUsernameFromRefresh(String token) {
+        return parse(token).getBody().getSubject();
     }
 }
