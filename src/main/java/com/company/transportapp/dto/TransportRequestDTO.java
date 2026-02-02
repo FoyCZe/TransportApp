@@ -35,6 +35,6 @@ public class TransportRequestDTO {
     private String driverNotes;
     private String dispatcherNotes;
 
-    private List<CargoItem> cargoItems;
+    private List<CreateCargoItemDTO> cargoItems;
 
 }

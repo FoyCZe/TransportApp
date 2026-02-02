@@ -2,58 +2,68 @@ package com.company.transportapp.service;
 
 
 import com.company.transportapp.model.entities.Document;
-import com.company.transportapp.model.enums.Enums;
+import com.company.transportapp.model.entities.DocumentVersion;
+import com.company.transportapp.model.entities.Employee;
 import com.company.transportapp.model.entities.Transport;
+import com.company.transportapp.model.enums.DocumentEvent;
+import com.company.transportapp.model.enums.Enums;
 import com.company.transportapp.repository.DocumentRepository;
-import com.company.transportapp.util.FileStorageUtil;
+import com.company.transportapp.repository.DocumentVersionRepository;
+import com.company.transportapp.repository.EmployeeRepository;
+import com.company.transportapp.repository.TransportRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import javax.print.Doc;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
 public class DocumentService {
 
-    private final DocumentRepository documentRepository;
+    private final DocumentRepository documentRepo;
+    private final DocumentVersionRepository versionRepo;
+    private final TransportRepository transportRepo;
+    private final EmployeeRepository employeeRepo;
 
-    private final String baseDir = "uploads/";
+    public void uploadNewVersion(Long transportId, Enums.DocumentType type, Long employeeId, String filePath, String originalFileName, DocumentEvent event) {
 
-    public void store(MultipartFile file, Long transportId, Enums.DocumentType type) throws IOException {
-        String storedPath = FileStorageUtil.storeFile(file, baseDir + transportId);
-        Document doc = Document.builder()
-                        .transport(Transport.builder().id(transportId).build())
-                        .documentType(type)
-                        .filePath(storedPath)
-                        .originalFileName(file.getOriginalFilename())
-                        .official(false)
-                        .uploadedAt(LocalDateTime.now())
-                        .build();
+        Transport transport = transportRepo.findById(transportId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Přeprava nenalezena"));
 
-        documentRepository.save(doc);
-    }
+        Employee employee = employeeRepo.findById(employeeId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Zaměstnanec nenalezen"));
 
-    public Resource loadAsResource(Long id) throws MalformedURLException {
-        Document doc = documentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Dokument nenalezen!"));
-        Path path = Paths.get(doc.getFilePath());
-        return new UrlResource(path.toUri());
-    }
+        Document document = documentRepo.findByTransportIdAndDocumentType(transportId, type)
+                .orElseGet(() -> {
+                    Document d = new Document();
+                    d.setTransport(transport);
+                    d.setDocumentType(type);
+                    d.setCurrentVersion(0);
+                    return documentRepo.save(d);
+                });
 
-    public void markOfficial(Long transportId) {
-        List<Document> docs = documentRepository.findAll().stream()
-                .filter(d -> d.getTransport().getId().equals(transportId))
-                .collect(Collectors.toList());
-        docs.forEach(d -> d.setOfficial(true));
-        documentRepository.saveAll(docs);
+        int nextVersion = document.getCurrentVersion() + 1;
+
+        DocumentVersion version = DocumentVersion.builder()
+                .document(document)
+                .versionNumber(nextVersion)
+                .filePath(filePath)
+                .originalFileName(originalFileName)
+                .event(event)
+                .uploadedBy(employee)
+                .uploadedAt(LocalDateTime.now())
+                .build();
+
+        versionRepo.save(version);
+
+        document.setCurrentVersion(nextVersion);
+        document.getVersion().add(version);
+
+        documentRepo.save(document);
+
     }
 }

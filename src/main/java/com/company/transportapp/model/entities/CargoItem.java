@@ -31,8 +31,11 @@ public class CargoItem {
     @Column(nullable = false)
     private Integer quantity;
 
-    @ManyToOne
-    private Container container;
+    private String releaseCode;
+    private String containerNumber;
+    private String containerSize;
 
+    private Double tareWeight;
     private Double cargoWeight;
+    private String sealNumber;
 }

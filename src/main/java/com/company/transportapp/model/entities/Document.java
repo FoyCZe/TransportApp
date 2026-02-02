@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name="documents")
@@ -28,12 +30,12 @@ public class Document {
     @Column(nullable=false)
     private Enums.DocumentType documentType;  // CMR, T1, INTERCHANGE A DALŠÍ
 
-    @Column(nullable=false)
-    private String filePath;  // Abolutní/relativní cesta na FS
+    @OneToMany(mappedBy = "document", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("versionNumber ASC")
+    @Builder.Default
+    private List<DocumentVersion> versions = new ArrayList<>();
 
-    private String originalFileName; // Název souboru
-    private Integer version;  // Verze souboru
-    private boolean official;  // Označení "oficiální"
-    private LocalDateTime uploadedAt;
+    // Aktuální (poslední / platná) verze dokumentu
+    private Integer currentVersion;
 
 }

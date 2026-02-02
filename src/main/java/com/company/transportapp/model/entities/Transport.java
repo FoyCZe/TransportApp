@@ -47,6 +47,7 @@ public class Transport {
     private List<CargoItem> cargoItems = new ArrayList<>();
 
     private Double cargoWeight;  // Hmotnost nákladu
+    private Double totalWeight;
 
     // Údaje o zadavateli
     private String clientName;

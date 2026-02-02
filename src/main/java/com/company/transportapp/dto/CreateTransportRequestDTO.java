@@ -30,7 +30,6 @@ public class CreateTransportRequestDTO {
     private String clientIco;
     private Double clientPrice;
 
-    private String driverNotes;
     private String dispatcherNotes;
 
     private List<CargoItemRequestDTO> cargoItems;
